@@ -4,6 +4,7 @@
 .DESCRIPTION
    this commande generates a home directory folder  in the given path, if this folder already exsists it will
    set the correct settings. It has a option to hide the sharefile.
+#>
 function add-nlhomedir
 {
     [CmdletBinding()]
@@ -17,7 +18,7 @@ function add-nlhomedir
         [ValidateNotNullOrEmpty()]
         [string[]]$Path,
 
-         [Parameter(Mandatory=$true,
+         [Parameter(Mandatory=$false,
                    ValueFromPipeline=$true,
                    parametersetname="visable",
                    Position=1)]

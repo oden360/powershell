@@ -4,7 +4,7 @@
 .DESCRIPTION
        Removes all the permissions of the given path folder and sets it to only admin and system
 .EXAMPLE
-       select-item <filepath> | set-nlhomedirpermissions
+       get-item <filepath> | set-nlhomedirpermissions
 >
 <# to do
     evaluate if the object is a directory

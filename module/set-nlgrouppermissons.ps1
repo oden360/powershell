@@ -17,7 +17,7 @@
 <# to do
         make the OU domain local
 #>
-function add-nlgrouppermissions
+function set-nlgrouppermissions
 {
     [CmdletBinding()]
     [OutputType([System.IO.FileSystemInfo])]
