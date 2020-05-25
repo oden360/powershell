@@ -20,10 +20,10 @@ function set-nlsharepermissions
         [System.IO.FileSystemInfo[]]$dirs,
         [Parameter(Mandatory=$false,
                    ValueFromPipeline=$true,
-                   parametersetname="hidden",
+                   parametersetname="visable",
                    Position=1)]
 
-        [Switch]$hidden
+        [Switch]$visable=$false
     )
     begin
     {
@@ -37,7 +37,7 @@ function set-nlsharepermissions
         foreach($dir in $dirs)
         {
             $name=$dir.Name
-            if ($hidden){
+            if (!($visable)){
                 $name =($dir.Name +"$")
            }
            try

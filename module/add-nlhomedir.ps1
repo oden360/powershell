@@ -19,10 +19,10 @@ function add-nlhomedir
 
          [Parameter(Mandatory=$true,
                    ValueFromPipeline=$true,
-                   parametersetname="hidden",
+                   parametersetname="visable",
                    Position=1)]
          [ValidateNotNullOrEmpty()]
-        [Switch]$hidden
+        [Switch]$visable=$false
     )
 
     Begin
@@ -35,13 +35,13 @@ function add-nlhomedir
     {
         try
         {
-           $dir= new-item  -Path $path  @al -ErrorAction stop | set-nlhomedirpermissions | set-nlsharepermissions -hidden:$hidden
+           $dir= new-item  -Path $path  @al -ErrorAction stop | set-nlhomedirpermissions | set-nlsharepermissions -visable:$visable
            Write-Output $dir
         }
         catch [System.Net.WebException],[System.Exception]
         {
             Write-Warning 'This folder already exists editing existing folder'
-            $dir=Get-Item -Path $Path | set-nlhomedirpermissions | set-nlsharepermissions -hidden:$hidden
+            $dir=Get-Item -Path $Path | set-nlhomedirpermissions | set-nlsharepermissions -visable:$visable
             Write-Output $dir
         }
     }
