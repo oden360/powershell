@@ -1,11 +1,11 @@
 ﻿<#
 .Synopsis
-   create home directory 
+   create home directory
 .DESCRIPTION
    this commande generates a home directory hidden filder in the given path, if this folder already exsists it will
    set the correct settings.
 #>
-# to do -> when you pipe a exicting file path the function keeps piping data to the next pipe gen erros 
+# to do -> when you pipe a exicting file path the function keeps piping data to the next pipe gen erros
 function add-nlhomedir
 {
     [CmdletBinding()]
@@ -46,8 +46,8 @@ function add-nlhomedir
            $dir=Get-Item -Path $Path | set-nlhomedirpermissions | set-nlsharepermissions -hidden:$hidden
             Write-Output $dir
         }
-       
-       
+
+
     }
     End
     {
@@ -62,7 +62,7 @@ function add-nlhomedir
 .EXAMPLE
    Example of how to use this cmdlet
 #>
-<# to do 
+<# to do
     evaluate if the object is a directory
 #>
 function set-nlhomedirpermissions
@@ -87,14 +87,14 @@ function set-nlhomedirpermissions
     {
         foreach($dir in $dirs){
             $acl=get-acl $dir
-            $acl.SetAccessRuleProtection($true,$false) # remove inheratance 
+            $acl.SetAccessRuleProtection($true,$false) # remove inheratance
             $acl.Access | %{$acl.RemoveAccessRule($_)} |Out-Null
-            $accesrules| % {$acl.AddAccessRule($_)}   |Out-Null  
+            $accesrules| % {$acl.AddAccessRule($_)}   |Out-Null
             Set-Acl -path $dir.FullName -AclObject $acl
             Write-Output $dir
-        } 
-    } 
-  
+        }
+    }
+
 }
 
 <#
@@ -123,11 +123,11 @@ function set-nlsharepermissions
                    ValueFromPipeline=$true,
                    parametersetname="hidden",
                    Position=1)]
-        
+
         [Switch]$hidden
     )
     begin
-    {  
+    {
         $at=@{
              "FullAccess"= (Get-ADDomain | Select-Object -expandProperty name)  + "\domain users";
              #full acces needs to stay first element
@@ -136,7 +136,7 @@ function set-nlsharepermissions
     Process
     {
         foreach($dir in $dirs)
-        { 
+        {
             $name=$dir.Name
             if ($hidden){
                 $name =($dir.Name +"$")
@@ -146,13 +146,13 @@ function set-nlsharepermissions
                New-SmbShare -name $name  -Path $dir.FullName @at -ErrorAction stop |Out-Null
                Write-Output $dir
            }
-       
+
            catch [System.Net.WebException],[System.Exception]
            {
                Write-Warning "share is already set adding permisson"
                Grant-SmbShareAccess -Name $name -AccountName $at.Values[0] -AccessRight Full -force |Out-Null
-               Write-Output $dir           
-           }    
+               Write-Output $dir
+           }
         }
     }
 }

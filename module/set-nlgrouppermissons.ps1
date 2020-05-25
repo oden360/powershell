@@ -1,25 +1,31 @@
-﻿
-<#
+﻿<#
 .Synopsis
    create and add groups to folder
 .DESCRIPTION
-   via the 
+   This function accepts a file system object/ object array. It will add groups following the ... .
+   This entails that the naming contention is as followed
+   adl-<filename>-fu /-m /-r
+
+   The ntfs permissions are set for
+        fu -> full control
+        m  -> modify
+        r  -> read and execute
+
 .EXAMPLE
-   Example of how to use this cmdlet
+   get-item "c:/<file path>" | set-nlgrouppermissions
 #>
-<# to do 
-    evaluate if the object is a directory
+<# to do
+        make the OU domain local
 #>
 function add-nlgrouppermissions
 {
     [CmdletBinding()]
     [OutputType([System.IO.FileSystemInfo])]
-    Param
-    (
-        # Param1 help description
+    Param(
         [Parameter(Mandatory=$true,
                    ValueFromPipeline=$true,
                    Position=0)]
+
         [ValidateNotNullOrEmpty()]
         [System.IO.FileSystemInfo[]]$dirs
     )
@@ -27,7 +33,7 @@ function add-nlgrouppermissions
     {
         $domain=(Get-ADDomain -Current LocalComputer).name
         $suffix=@{'-fu'='fullcontrol';'-m'='modify';'-r' ='readandexecute'}
-      
+
     }
     Process
     {
@@ -39,18 +45,13 @@ function add-nlgrouppermissions
             try{
              $adgroups| % {New-ADGroup -path $path -Name $_  -GroupScope DomainLocal -GroupCategory Security }
              $accesrules = $adgroups|%{New-Object System.Security.AccessControl.FileSystemAccessRule ($_,$suffix.('-'+$_.split('-')[2]),"allow")}
-             $accesrules| % {$acl.AddAccessRule($_)}  |Out-Null 
+             $accesrules| % {$acl.AddAccessRule($_)}  |Out-Null
              Set-Acl -path $acl.Path -AclObject $acl
             }
             catch{
              Write-Warning 'These groups exist... not adjusting anything'
             }
-          
-          
-           
-
         Write-Output $dir
-        } 
-    } 
-  
+        }
+    }
 }
