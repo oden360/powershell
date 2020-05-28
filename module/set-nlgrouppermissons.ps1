@@ -33,7 +33,11 @@ function set-nlgrouppermissions
     {
         $domain=(Get-ADDomain -Current LocalComputer).name
         $suffix=@{'-fu'='fullcontrol';'-m'='modify';'-r' ='readandexecute'}
-
+       try{
+            Get-ADOrganizationalUnit -filter "name -like 'domain local'"
+       }catch{
+            add-nlOUstructer -group
+       }
     }
     Process
     {
