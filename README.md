@@ -24,6 +24,8 @@
     New-VMSwitch -name PrivateSwitch -SwitchType Private
 
     Get-VMSwitch
+## changing swith on running vm
+    get-vm <vmname> |get-vmnetadapter |connect-vmnetworkadapter -switchname <switchname>
 ## Log in to the new domain controller
 # Install ad-domain services and tools
     Add-windowsfeature ad-domain-services -includeservicetools
