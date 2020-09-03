@@ -5,36 +5,49 @@
    this commande generates a home directory folder  in the given path, if this folder already exsists it will
    set the correct settings. It has a option to hide the sharefile.
 #>
-function add-nlhomedir
+function install-vm
 {
     [CmdletBinding()]
     [OutputType([int])]
     Param
     (
-        # new vhd
+        # bool
+        [Parameter(Mandatory=$false,
+                   ValueFromPipeline=$true,
+                   Position=0)]
+        [ValidateNotNullOrEmpty()]
+        [switch]$iso=$false,
+        # parrent path or iso
         [Parameter(Mandatory=$true,
                    ValueFromPipeline=$true,
                    Position=0)]
         [ValidateNotNullOrEmpty()]
-        [string[]]$Path,
+        [string]$Path,
         # name
         [Parameter(Mandatory=$true,
                    ValueFromPipeline=$true,
                    Position=0)]
         [ValidateNotNullOrEmpty()]
-        [string[]]$name,
+        [string]$name,
         # mem
         [Parameter(Mandatory=$true,
                    ValueFromPipeline=$true,
                    Position=0)]
         [ValidateNotNullOrEmpty()]
-        [string[]]$name,
+        [int64]$mem,
         # sw
         [Parameter(Mandatory=$true,
                    ValueFromPipeline=$true,
                    Position=0)]
         [ValidateNotNullOrEmpty()]
-        [string[]]$name,
+        [string]$sw,
+ # size
+        [Parameter(Mandatory=$true,
+                   ValueFromPipeline=$true,
+                   Position=0)]
+        [ValidateNotNullOrEmpty()]
+        [int64]$size
+
 
     )
 
@@ -47,8 +60,9 @@ function add-nlhomedir
     {
         try
         {
-            New-VHD -Path  $vhdpath -parentPath $path
-#           New-VHD -Path $vhdpath
+           if ($iso) {New-VHD -Path $vhdpath -SizeBytes $size}else{
+             New-VHD -Path  $vhdpath -parentPath $path -SizeBytes $size 
+            }
             New-VM -Name $name -MemoryStartupBytes $mem -VHDPath $vhdpath -Path  $vmpath -Generation 2 -SwitchName $sw
         }
 
@@ -58,4 +72,3 @@ function add-nlhomedir
         }
     }
 }
-
