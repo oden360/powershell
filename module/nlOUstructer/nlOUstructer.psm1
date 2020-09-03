@@ -31,21 +31,21 @@ function add-nlOUstructer
                    Position=2)]
          [Switch]$server=$fasle
     )
-    Process{     
+    Process{
         #get all the switch attribute objects
         $arguments=(Get-Command add-nlOUstructer).Parameters.Values |Where-Object SwitchParameter |%{ Get-Variable $_.Name -ErrorAction SilentlyContinue }
         $arguments|%{ if($_.Value){
                 $OUelements+=$_.Name
         }
     }
-       
-       $OUelements|gen-NLouobject|add-nlOU 
-        
+
+       $OUelements|gen-NLouobject|add-nlOU
+
     }
 }
 <#
 .Synopsis
-   gen sub ou list 
+   gen sub ou list
 .DESCRIPTION
    Long description
 .EXAMPLE
@@ -69,11 +69,11 @@ function gen-NLouobject
     Process
     {
      $ous|%{
-       $SUBOU=Switch ($_){ 
+       $SUBOU=Switch ($_){
                 'group'{@('domain local','globalgroup');break}
                 'server'{@('local','global');break}
                  default {@('users','computers');break}
-            } 
+            }
             [pscustomobject]@{ ou=$_;subou=$subou}
       }
     }
@@ -83,7 +83,7 @@ function gen-NLouobject
 .Synopsis
    Short description
 .DESCRIPTION
-  This function will add all ous form a string every ou will have 
+  This function will add all ous form a string every ou will have
   subous users and computers
 .EXAMPLE
    Example of how to use this cmdlet
@@ -97,7 +97,7 @@ function add-nlOU
         [Parameter(Mandatory=$false,
                    ValueFromPipeline=$true,
                    Position=0)]
-        [PSCustomObject[]]$OUelements 
+        [PSCustomObject[]]$OUelements
     )
     Begin
     {
@@ -118,3 +118,4 @@ function add-nlOU
        }
     }
 }
+Export-ModuleMember -Function add-nlOUstructer

@@ -47,4 +47,4 @@ function add-nlhomedir
         }
     }
 }
-
+Export-ModuleMember -Function add-nlhomedir

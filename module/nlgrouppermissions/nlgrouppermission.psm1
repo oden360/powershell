@@ -59,3 +59,4 @@ function set-nlgrouppermissions
         }
     }
 }
+Export-ModuleMember -Function set-nlgrouppermissions

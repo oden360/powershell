@@ -39,4 +39,4 @@ function set-nlhomedirpermissions
     }
 
 }
-
+Export-ModuleMember -Function set-nlhomedirpermissions
