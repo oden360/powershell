@@ -54,14 +54,14 @@ function install-vm
     Begin
     {
         $vhdpath="C:\hyper-v\child disks\$name.vhdx"
-        $vmpath='C:\hyper-v\VM\$name'
+        $vmpath="C:\hyper-v\VM\$name"
     }
     Process
     {
         try
         {
            if ($iso) {New-VHD -Path $vhdpath -SizeBytes $size}else{
-             New-VHD -Path  $vhdpath -parentPath $path -SizeBytes $size 
+             New-VHD -Path  $vhdpath -parentPath $path -SizeBytes $size
             }
             New-VM -Name $name -MemoryStartupBytes $mem -VHDPath $vhdpath -Path  $vmpath -Generation 2 -SwitchName $sw
         }
