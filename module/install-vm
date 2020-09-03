@@ -1,0 +1,61 @@
+<#
+.Synopsis
+  make a install
+.DESCRIPTION
+   this commande generates a home directory folder  in the given path, if this folder already exsists it will
+   set the correct settings. It has a option to hide the sharefile.
+#>
+function add-nlhomedir
+{
+    [CmdletBinding()]
+    [OutputType([int])]
+    Param
+    (
+        # new vhd
+        [Parameter(Mandatory=$true,
+                   ValueFromPipeline=$true,
+                   Position=0)]
+        [ValidateNotNullOrEmpty()]
+        [string[]]$Path,
+        # name
+        [Parameter(Mandatory=$true,
+                   ValueFromPipeline=$true,
+                   Position=0)]
+        [ValidateNotNullOrEmpty()]
+        [string[]]$name,
+        # mem
+        [Parameter(Mandatory=$true,
+                   ValueFromPipeline=$true,
+                   Position=0)]
+        [ValidateNotNullOrEmpty()]
+        [string[]]$name,
+        # sw
+        [Parameter(Mandatory=$true,
+                   ValueFromPipeline=$true,
+                   Position=0)]
+        [ValidateNotNullOrEmpty()]
+        [string[]]$name,
+
+    )
+
+    Begin
+    {
+        $vhdpath="C:\hyper-v\child disks\$name.vhdx"
+        $vmpath='C:\hyper-v\VM\$name'
+    }
+    Process
+    {
+        try
+        {
+            New-VHD -Path  $vhdpath -parentPath $path
+#           New-VHD -Path $vhdpath
+            New-VM -Name $name -MemoryStartupBytes $mem -VHDPath $vhdpath -Path  $vmpath -Generation 2 -SwitchName $sw
+        }
+
+        catch [System.Net.WebException],[System.Exception]
+        {
+            Write-Warning 'something went wrong'
+        }
+    }
+}
+

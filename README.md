@@ -1,7 +1,16 @@
 # Powershell
+# invoke commands
+    Invoke-Command -computername Server-R2,Server-DC4,Server12 `
+     -command { Get-EventLog Security -newest 200 |
+     Where { $_.EventID -eq 1212 }}
     Powershell scripts
     These are scripts to automate the management of window server
-
+# manage hyper-v vms
+## get-ip
+(get-vm).name |Get-VMNetworkAdapter| fl name, ipaddresses
+## trusted vm
+$curList = (Get-Item WSMan:\localhost\Client\TrustedHosts).value
+Set-Item WSMan:\localhost\Client\TrustedHosts -Concatenate -Value "$curlist, item"
 ## Installation main machine
 ## Install hyper-V
     Install-windowsfeature hyper-v - includeallsubfeqtures -includemanagmenttools -restart
@@ -39,11 +48,15 @@ Install-addsdomaincontroller -Domainname "<name>" -credential (get credential)
 # change ip
         new-netipaddress -ipaddress -prefixlength -defaultgateway -interfacealias
         set-dnsclientiserveraddress -interfaceindex -serveraddress
+# add to domain
+ add-computer -domain <domain> -credential <name@domain>
 # Using powershell scripts
 # getting items from csv
     $csv=import-csv <path> -delimiter (';')
     $ounames=($csv|%{$_.substring(0,1).toupper+$_.substring(1).tolower})|get-unique
 ## Installing modules
+get-module activedirectory
+import-module activedirectory
     Git clone https://github.com/oden360/powershell.git
     Place in powershell module
     Load scripts
